@@ -5,7 +5,7 @@ except:
 
 
 class EmbeddedSystem:
-    LED_PIN = 11
+    LED_PIN = 12
 
     # Constructor
     def __init__(self):
