@@ -21,3 +21,6 @@ class EmbeddedSystem:
     def turn_off_led(self):
         GPIO.output(self.LED_PIN, GPIO.LOW)
         print("INFO: the LED has been turned off.")
+
+    def destroy(self):
+        GPIO.cleanup()
