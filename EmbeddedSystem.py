@@ -8,6 +8,7 @@ from libs.PCF8574 import PCF8574_GPIO
 
 
 class EmbeddedSystem:
+    BUTTON_PIN = 7
     LED_PIN = 12
 
     # Constructor
@@ -17,6 +18,9 @@ class EmbeddedSystem:
         # LED setup
         GPIO.setup(self.LED_PIN, GPIO.OUT)
         self.led_has_been_turned_on = False
+
+        # Button setup
+        GPIO.setup(self.BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
         # LCD setup
         self.mcp = None
