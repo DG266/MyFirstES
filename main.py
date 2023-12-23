@@ -1,13 +1,21 @@
 from EmbeddedSystem import EmbeddedSystem
+import string
+import random
 import time
 
-# I have created an instance of the EmbeddedSystem class
 es = EmbeddedSystem()
 
-while True:
-    es.turn_on_led()
-    time.sleep(1)
-    es.turn_off_led()
+
+def loop():
+    while True:
+        letters = string.ascii_lowercase
+        result_str = ''.join(random.choice(letters) for i in range(8))
+        es.print_lcd(result_str)
+        time.sleep(1)
 
 
-es.destroy()
+if __name__ == '__main__':
+    try:
+        loop()
+    except KeyboardInterrupt:
+        es.destroy()

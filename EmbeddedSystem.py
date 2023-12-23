@@ -3,6 +3,9 @@ try:
 except:
     import mock.GPIO as GPIO
 
+from libs.Adafruit_LCD1602 import Adafruit_CharLCD
+from libs.PCF8574 import PCF8574_GPIO
+
 
 class EmbeddedSystem:
     LED_PIN = 12
@@ -13,9 +16,12 @@ class EmbeddedSystem:
 
         # LED setup
         GPIO.setup(self.LED_PIN, GPIO.OUT)
-        # This is "False" because when you load this program on the Raspberry
-        # the LED is initially off
         self.led_has_been_turned_on = False
+
+        # LCD setup
+        self.mcp = None
+        self.lcd = None
+        self.initialize_lcd()
 
     def turn_on_led(self):
         GPIO.output(self.LED_PIN, GPIO.HIGH)
@@ -26,6 +32,29 @@ class EmbeddedSystem:
         GPIO.output(self.LED_PIN, GPIO.LOW)
         self.led_has_been_turned_on = False
         print("INFO: the LED has been turned off.")
+
+    def initialize_lcd(self):
+        PCF8574_address = 0x27  # I2C address of the PCF8574 chip.
+        PCF8574A_address = 0x3F  # I2C address of the PCF8574A chip.
+
+        # Create PCF8574 GPIO adapter.
+        try:
+            self.mcp = PCF8574_GPIO(PCF8574_address)
+        except:
+            try:
+                self.mcp = PCF8574_GPIO(PCF8574A_address)
+            except:
+                print("I2C Address Error !")
+                exit(1)
+
+        # Create LCD, passing in MCP GPIO adapter.
+        self.lcd = Adafruit_CharLCD(pin_rs=0, pin_e=2, pins_db=[4, 5, 6, 7], GPIO=self.mcp)
+        self.mcp.output(3, 1)  # turn on LCD backlight
+        self.lcd.begin(16, 2)  # set number of LCD lines and columns
+
+    def print_lcd(self, message):
+        self.lcd.setCursor(0, 0)
+        self.lcd.message(message)
 
     def destroy(self):
         GPIO.cleanup()
