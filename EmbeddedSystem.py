@@ -60,5 +60,8 @@ class EmbeddedSystem:
         self.lcd.setCursor(0, 0)
         self.lcd.message(message)
 
+    def clear_lcd(self):
+        self.lcd.clear()
+
     def destroy(self):
         GPIO.cleanup()
