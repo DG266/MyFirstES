@@ -3,13 +3,16 @@ try:
 except:
     import mock.GPIO as GPIO
 
+import time
 from libs.Adafruit_LCD1602 import Adafruit_CharLCD
 from libs.PCF8574 import PCF8574_GPIO
+from libs.Freenove_DHT import DHT
 
 
 class EmbeddedSystem:
     BUTTON_PIN = 7
     LED_PIN = 12
+    DHT11_PIN = 37
 
     # Constructor
     def __init__(self):
@@ -19,6 +22,9 @@ class EmbeddedSystem:
         GPIO.setup(self.LED_PIN, GPIO.OUT)
         self.led_has_been_turned_on = False
 
+        # DHT11 setup
+        self.dht11 = DHT(self.DHT11_PIN)
+
         # Button setup
         GPIO.setup(self.BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
@@ -26,6 +32,10 @@ class EmbeddedSystem:
         self.mcp = None
         self.lcd = None
         self.initialize_lcd()
+
+        # Other variables
+        self.environment_temp = -1
+        self.humidity = -1
 
     def turn_on_led(self):
         GPIO.output(self.LED_PIN, GPIO.HIGH)
@@ -36,6 +46,18 @@ class EmbeddedSystem:
         GPIO.output(self.LED_PIN, GPIO.LOW)
         self.led_has_been_turned_on = False
         print("INFO: the LED has been turned off.")
+
+    def read_environment_temp_and_humidity(self):
+        print("INFO: Reading environment temperature and humidity...")
+        for i in range(0, 15):
+            chk = self.dht11.readDHT11()
+            if chk is self.dht11.DHTLIB_OK:
+                break
+            time.sleep(0.1)
+
+        self.environment_temp = self.dht11.temperature
+        self.humidity = self.dht11.humidity
+        print("INFO: Done!")
 
     def initialize_lcd(self):
         PCF8574_address = 0x27  # I2C address of the PCF8574 chip.

@@ -4,24 +4,21 @@ except:
     import mock.GPIO as GPIO
 
 from EmbeddedSystem import EmbeddedSystem
-import string
-import random
-import time
+
 
 es = EmbeddedSystem()
 
 
 def button_event(channel):
-    print('button_event - GPIO%d' % channel)
-    letters = string.ascii_lowercase
-    result_str = ''.join(random.choice(letters) for i in range(8))
-    es.print_lcd(result_str)
+    print('INFO: The button has been pressed (GPIO%d).' % channel)
+    # TODO
 
 
 def loop():
     GPIO.add_event_detect(es.BUTTON_PIN, GPIO.FALLING, callback=button_event, bouncetime=500)
     while True:
-        pass
+        es.read_environment_temp_and_humidity()
+        es.print_lcd("Temp: %.2f,\nHum: %.2f" % (es.environment_temp, es.humidity))
 
 
 if __name__ == '__main__':
