@@ -23,4 +23,7 @@ if __name__ == '__main__':
     try:
         loop()
     except KeyboardInterrupt:
+        # Clear LCD screen
+        es.print_lcd("")
+
         es.destroy()
