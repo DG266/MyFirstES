@@ -11,13 +11,13 @@ import Adafruit_DHT
 
 
 class EmbeddedSystem:
-    BUTTON_PIN = 7
-    LED_PIN = 12
+    BUTTON_PIN = 4
+    LED_PIN = 17
     DHT11_PIN = 26
 
     # Constructor
     def __init__(self):
-        GPIO.setmode(GPIO.BOARD)
+        GPIO.setmode(GPIO.BCM)
 
         # LED setup
         GPIO.setup(self.LED_PIN, GPIO.OUT)
