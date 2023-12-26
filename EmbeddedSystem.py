@@ -64,7 +64,6 @@ class EmbeddedSystem:
         self.humidity, self.environment_temp = Adafruit_DHT.read_retry(self.dht11, self.DHT11_PIN)
         print("INFO: Done!")
         print("INFO: Temp = %.2f, Hum = %.2f" % (self.environment_temp, self.humidity))
-        print(self.environment_temp)
 
 
     def initialize_lcd(self):
