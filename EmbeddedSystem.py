@@ -6,13 +6,14 @@ except:
 import time
 from libs.Adafruit_LCD1602 import Adafruit_CharLCD
 from libs.PCF8574 import PCF8574_GPIO
-from libs.Freenove_DHT import DHT
+#from libs.Freenove_DHT import DHT
+import Adafruit_DHT
 
 
 class EmbeddedSystem:
     BUTTON_PIN = 7
     LED_PIN = 12
-    DHT11_PIN = 37
+    DHT11_PIN = 26
 
     # Constructor
     def __init__(self):
@@ -23,7 +24,8 @@ class EmbeddedSystem:
         self.led_has_been_turned_on = False
 
         # DHT11 setup
-        self.dht11 = DHT(self.DHT11_PIN)
+        #self.dht11 = DHT(self.DHT11_PIN)
+        self.dht11 = Adafruit_DHT.DHT11
 
         # Button setup
         GPIO.setup(self.BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -49,15 +51,21 @@ class EmbeddedSystem:
 
     def read_environment_temp_and_humidity(self):
         print("INFO: Reading environment temperature and humidity...")
-        for i in range(0, 15):
-            chk = self.dht11.readDHT11()
-            if chk is self.dht11.DHTLIB_OK:
-                break
-            time.sleep(0.1)
 
-        self.environment_temp = self.dht11.temperature
-        self.humidity = self.dht11.humidity
+        #for i in range(0, 15):
+        #    chk = self.dht11.readDHT11()
+        #    if chk is self.dht11.DHTLIB_OK:
+        #        break
+        #    time.sleep(0.1)
+
+        #self.environment_temp = self.dht11.temperature
+        #self.humidity = self.dht11.humidity
+
+        self.humidity, self.environment_temp = Adafruit_DHT.read_retry(self.dht11, self.DHT11_PIN)
         print("INFO: Done!")
+        print("INFO: Temp = %.2f, Hum = %.2f" % (self.environment_temp, self.humidity))
+        print(self.environment_temp)
+
 
     def initialize_lcd(self):
         PCF8574_address = 0x27  # I2C address of the PCF8574 chip.
