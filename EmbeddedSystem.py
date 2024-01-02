@@ -11,6 +11,7 @@ import Adafruit_DHT
 class EmbeddedSystem:
     BUTTON_PIN = 4
     DHT11_PIN = 26
+    LIQUID_LEVEL_PIN = 17
 
     # Constructor
     def __init__(self):
@@ -22,6 +23,9 @@ class EmbeddedSystem:
 
         # Button setup
         GPIO.setup(self.BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
+        # Liquid level sensor setup
+        GPIO.setup(self.LIQUID_LEVEL_PIN, GPIO.IN)
 
         # LCD setup
         self.mcp = None
@@ -35,9 +39,15 @@ class EmbeddedSystem:
     def read_environment_temp_and_humidity(self):
         print("INFO: Reading environment temperature and humidity...")
         self.humidity, self.environment_temp = Adafruit_DHT.read_retry(self.dht11, self.DHT11_PIN)
-        print("INFO: Done!")
         print("INFO: Temp = %.2f, Hum = %.2f" % (self.environment_temp, self.humidity))
 
+    def check_liquid_level(self):
+        print("INFO: Checking liquid level...")
+        result = GPIO.input(self.LIQUID_LEVEL_PIN)
+        if result == 0:
+            print(f"INFO: Liquid level is too low (result = {result})")
+        else:
+            print(f"INFO: Liquid level is fine (result = {result})")
 
     def initialize_lcd(self):
         PCF8574_address = 0x27  # I2C address of the PCF8574 chip.
