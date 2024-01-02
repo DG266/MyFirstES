@@ -3,25 +3,18 @@ try:
 except:
     import mock.GPIO as GPIO
 
-import time
 from libs.Adafruit_LCD1602 import Adafruit_CharLCD
 from libs.PCF8574 import PCF8574_GPIO
-#from libs.Freenove_DHT import DHT
 import Adafruit_DHT
 
 
 class EmbeddedSystem:
     BUTTON_PIN = 4
-    LED_PIN = 17
     DHT11_PIN = 26
 
     # Constructor
     def __init__(self):
         GPIO.setmode(GPIO.BCM)
-
-        # LED setup
-        GPIO.setup(self.LED_PIN, GPIO.OUT)
-        self.led_has_been_turned_on = False
 
         # DHT11 setup
         #self.dht11 = DHT(self.DHT11_PIN)
@@ -39,28 +32,8 @@ class EmbeddedSystem:
         self.environment_temp = -1
         self.humidity = -1
 
-    def turn_on_led(self):
-        GPIO.output(self.LED_PIN, GPIO.HIGH)
-        self.led_has_been_turned_on = True
-        print("INFO: the LED has been turned on.")
-
-    def turn_off_led(self):
-        GPIO.output(self.LED_PIN, GPIO.LOW)
-        self.led_has_been_turned_on = False
-        print("INFO: the LED has been turned off.")
-
     def read_environment_temp_and_humidity(self):
         print("INFO: Reading environment temperature and humidity...")
-
-        #for i in range(0, 15):
-        #    chk = self.dht11.readDHT11()
-        #    if chk is self.dht11.DHTLIB_OK:
-        #        break
-        #    time.sleep(0.1)
-
-        #self.environment_temp = self.dht11.temperature
-        #self.humidity = self.dht11.humidity
-
         self.humidity, self.environment_temp = Adafruit_DHT.read_retry(self.dht11, self.DHT11_PIN)
         print("INFO: Done!")
         print("INFO: Temp = %.2f, Hum = %.2f" % (self.environment_temp, self.humidity))
