@@ -1,3 +1,5 @@
+import time
+
 try:
     import RPi.GPIO as GPIO
 except:
@@ -19,6 +21,7 @@ def loop():
     while True:
         es.read_environment_temp_and_humidity()
         es.print_lcd("Temp: %.2f,\nHum: %.2f" % (es.environment_temp, es.humidity))
+        time.sleep(1)
 
 
 if __name__ == '__main__':
