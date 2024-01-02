@@ -92,5 +92,8 @@ class EmbeddedSystem:
     def clear_lcd(self):
         self.lcd.clear()
 
+    def turn_off_lcd_backlight(self):
+        self.mcp.output(3, 0)
+
     def destroy(self):
         GPIO.cleanup()

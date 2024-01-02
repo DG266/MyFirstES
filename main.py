@@ -26,5 +26,5 @@ if __name__ == '__main__':
         loop()
     except KeyboardInterrupt:
         es.clear_lcd()
-
+        es.turn_off_lcd_backlight()
         es.destroy()
