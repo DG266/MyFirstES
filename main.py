@@ -2,7 +2,7 @@ import time
 
 try:
     import RPi.GPIO as GPIO
-except:
+except ImportError:
     import mock.GPIO as GPIO
 
 from EmbeddedSystem import EmbeddedSystem

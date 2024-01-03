@@ -1,6 +1,6 @@
 try:
     import RPi.GPIO as GPIO
-except:
+except ImportError:
     import mock.GPIO as GPIO
 
 from libs.Adafruit_LCD1602 import Adafruit_CharLCD
