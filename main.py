@@ -22,6 +22,7 @@ def loop():
         es.read_environment_temp_and_humidity()
         es.print_lcd("Temp: %.2f,\nHum: %.2f" % (es.environment_temp, es.humidity))
         es.check_liquid_level()
+        es.check_liquid_turbidity()
         time.sleep(1)
 
 

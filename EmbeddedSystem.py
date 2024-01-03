@@ -5,13 +5,18 @@ except:
 
 from libs.Adafruit_LCD1602 import Adafruit_CharLCD
 from libs.PCF8574 import PCF8574_GPIO
+from libs.DFRobot_ADS1115 import ADS1115
 import Adafruit_DHT
 
 
 class EmbeddedSystem:
+    # Raspberry pins
     BUTTON_PIN = 4
     DHT11_PIN = 26
     LIQUID_LEVEL_PIN = 17
+
+    # ADC pins
+    TURBIDITY_PIN = 2
 
     # Constructor
     def __init__(self):
@@ -26,6 +31,11 @@ class EmbeddedSystem:
 
         # Liquid level sensor setup
         GPIO.setup(self.LIQUID_LEVEL_PIN, GPIO.IN)
+
+        # ADC setup
+        self.ads1115 = ADS1115()
+        self.ads1115.set_addr_ADS1115(0x48)
+        self.ads1115.set_gain(0x00)
 
         # LCD setup
         self.mcp = None
@@ -48,6 +58,13 @@ class EmbeddedSystem:
             print(f"INFO: Liquid level is too low (result = {result})")
         else:
             print(f"INFO: Liquid level is fine (result = {result})")
+
+    def check_liquid_turbidity(self):
+        print("INFO: Checking liquid turbidity...")
+        voltage = self.ads1115.read_voltage(self.TURBIDITY_PIN)['r']
+        voltage = voltage / 1000 # from mV to V
+        ntu = (-1120.4 * (voltage ** 2)) + (5742.3 * voltage) - 4352.9
+        print("INFO: Water turbidity = %.2f NTU (voltage = %.2f)" % (ntu, voltage))
 
     def initialize_lcd(self):
         PCF8574_address = 0x27  # I2C address of the PCF8574 chip.
