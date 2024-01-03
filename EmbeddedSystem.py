@@ -45,6 +45,8 @@ class EmbeddedSystem:
         # Other variables
         self.environment_temp = -1
         self.humidity = -1
+        self.is_liquid_level_good = False
+        self.ntu_val = -1
 
     def read_environment_temp_and_humidity(self):
         print("INFO: Reading environment temperature and humidity...")
@@ -55,16 +57,18 @@ class EmbeddedSystem:
         print("INFO: Checking liquid level...")
         result = GPIO.input(self.LIQUID_LEVEL_PIN)
         if result == 0:
+            self.is_liquid_level_good = False
             print(f"INFO: Liquid level is too low (result = {result})")
         else:
+            self.is_liquid_level_good = True
             print(f"INFO: Liquid level is fine (result = {result})")
 
     def check_liquid_turbidity(self):
         print("INFO: Checking liquid turbidity...")
         voltage = self.ads1115.read_voltage(self.TURBIDITY_PIN)['r']
         voltage = voltage / 1000 # from mV to V
-        ntu = (-1120.4 * (voltage ** 2)) + (5742.3 * voltage) - 4352.9
-        print("INFO: Water turbidity = %.2f NTU (voltage = %.2f)" % (ntu, voltage))
+        self.ntu_val = (-1120.4 * (voltage ** 2)) + (5742.3 * voltage) - 4352.9
+        print("INFO: Water turbidity = %.2f NTU (voltage = %.2f)" % (self.ntu_val, voltage))
 
     def initialize_lcd(self):
         PCF8574_address = 0x27  # I2C address of the PCF8574 chip.
