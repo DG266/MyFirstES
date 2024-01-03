@@ -23,7 +23,6 @@ class EmbeddedSystem:
         GPIO.setmode(GPIO.BCM)
 
         # DHT11 setup
-        #self.dht11 = DHT(self.DHT11_PIN)
         self.dht11 = Adafruit_DHT.DHT11
 
         # Button setup
