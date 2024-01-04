@@ -6,6 +6,7 @@ except ImportError:
 from libs.Adafruit_LCD1602 import Adafruit_CharLCD
 from libs.PCF8574 import PCF8574_GPIO
 from libs.DFRobot_ADS1115 import ADS1115
+from libs.DFRobot_PH import DFRobot_PH
 import Adafruit_DHT
 
 
@@ -16,6 +17,7 @@ class EmbeddedSystem:
     LIQUID_LEVEL_PIN = 17
 
     # ADC pins
+    PH_SENSOR_PIN = 0
     TURBIDITY_PIN = 2
 
     # Constructor
@@ -36,6 +38,9 @@ class EmbeddedSystem:
         self.ads1115.set_addr_ADS1115(0x48)
         self.ads1115.set_gain(0x00)
 
+        # pH sensor setup
+        self.ph_sensor = DFRobot_PH()
+
         # LCD setup
         self.mcp = None
         self.lcd = None
@@ -46,6 +51,7 @@ class EmbeddedSystem:
         self.humidity = -1
         self.is_liquid_level_good = False
         self.ntu_val = -1
+        self.ph_val = -1
 
     def read_environment_temp_and_humidity(self):
         print("INFO: Reading environment temperature and humidity...")
@@ -68,6 +74,15 @@ class EmbeddedSystem:
         voltage = voltage / 1000 # from mV to V
         self.ntu_val = (-1120.4 * (voltage ** 2)) + (5742.3 * voltage) - 4352.9
         print("INFO: Water turbidity = %.2f NTU (voltage = %.2f)" % (self.ntu_val, voltage))
+
+    def check_water_ph(self):
+        # TODO: This is NOT correct - you should use the actual water temperature (I'll fix it later)
+        temperature = 19
+
+        print("INFO: Checking water pH...")
+        voltage = self.ads1115.read_voltage(self.PH_SENSOR_PIN)
+        self.ph_val = self.ph_sensor.read_PH(voltage['r'], temperature)
+        print(f"INFO: Water pH is {self.ph_val:.2f} (water temp. = {temperature})")
 
     def initialize_lcd(self):
         PCF8574_address = 0x27  # I2C address of the PCF8574 chip.

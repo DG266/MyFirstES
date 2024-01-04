@@ -54,6 +54,7 @@ def loop():
         es.read_environment_temp_and_humidity()
         es.check_liquid_level()
         es.check_liquid_turbidity()
+        es.check_water_ph()
 
         update_screen()
 
