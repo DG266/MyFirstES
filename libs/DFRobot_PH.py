@@ -30,8 +30,10 @@ class DFRobot_PH():
 				acidVoltageLine    = acidVoltageLine.strip('acidVoltage=')
 				_acidVoltage       = float(acidVoltageLine)
 		except :
-			print "phdata.txt ERROR ! Please run DFRobot_PH_Reset"
+			print("phdata.txt ERROR ! Please run DFRobot_PH_Reset")
 			sys.exit(1)
+
+
 	def read_PH(self,voltage,temperature):
 		'''!
           @brief   Convert voltage to PH with temperature compensation.
@@ -52,28 +54,28 @@ class DFRobot_PH():
           @brief   Calibrate the calibration data.
           @param voltage       Voltage value
         '''
-		if (voltage>1322 and voltage<1678):
-			print ">>>Buffer Solution:7.0"
+		if voltage > 1322 and voltage < 1678:
+			print(">>>Buffer Solution:7.0")
 			f=open('phdata.txt','r+')
 			flist=f.readlines()
 			flist[0]='neutralVoltage='+ str(voltage) + '\n'
 			f=open('phdata.txt','w+')
 			f.writelines(flist)
 			f.close()
-			print ">>>PH:7.0 Calibration completed,Please enter Ctrl+C exit calibration in 5 seconds"
+			print(">>>PH:7.0 Calibration completed,Please enter Ctrl+C exit calibration in 5 seconds")
 			time.sleep(5.0)
-		elif (voltage>1854 and voltage<2210):
-			print ">>>Buffer Solution:4.0"
-			f=open('phdata.txt','r+')
-			flist=f.readlines()
-			flist[1]='acidVoltage='+ str(voltage) + '\n'
-			f=open('phdata.txt','w+')
+		elif voltage > 1854 and voltage < 2210:
+			print(">>>Buffer Solution:4.0")
+			f = open('phdata.txt', 'r+')
+			flist = f.readlines()
+			flist[1] = 'acidVoltage=' + str(voltage) + '\n'
+			f = open('phdata.txt', 'w+')
 			f.writelines(flist)
 			f.close()
-			print ">>>PH:4.0 Calibration completed,Please enter Ctrl+C exit calibration in 5 seconds"
+			print(">>>PH:4.0 Calibration completed,Please enter Ctrl+C exit calibration in 5 seconds")
 			time.sleep(5.0)
 		else:
-			print ">>>Buffer Solution Error Try Again<<<"
+			print(">>>Buffer Solution Error Try Again<<<")
 	def reset(self):
 		'''!
           @brief   Reset the calibration data to default value.
@@ -89,7 +91,7 @@ class DFRobot_PH():
 			f=open('phdata.txt','w+')
 			f.writelines(flist)
 			f.close()
-			print ">>>Reset to default parameters<<<"
+			print(">>>Reset to default parameters<<<")
 		except:
 			f=open('phdata.txt','w')
 			#flist=f.readlines()
@@ -98,4 +100,4 @@ class DFRobot_PH():
 			#f=open('data.txt','w+')
 			f.writelines(flist)
 			f.close()
-			print ">>>Reset to default parameters<<<"
+			print(">>>Reset to default parameters<<<")
